@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import website.marcioheleno.mvpquestmanager.model.entity.Respondente;
+import website.marcioheleno.mvpquestmanager.service.RespondenteService;
 
 import java.util.HashMap;
 
@@ -16,12 +17,14 @@ import java.util.HashMap;
 public class RespondenteController {
 
     @Autowired
+    RespondenteService respondenteService;
 
     @RequestMapping(value = "", method = RequestMethod.GET)
     public ResponseEntity<Respondente> getRespondentes () {
         HashMap result = new HashMap();
 
-        result.put("data", re)
+        result.put("data", respondenteService.getRespondenteList());
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @RequestMapping(value="", method = RequestMethod.GET)
