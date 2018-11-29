@@ -8,9 +8,9 @@ import java.util.List;
 @Mapper
 public interface TopicMapper {
 
-    public List getTopicList();
-    public Topic getTopicInfo(int topicNo);
-    public int addTopicInfo(Topic topic);
-    public int setTopicInfo(Topic topic);
-    public int deleteTopicInfo(int topic_no);
+    List getTopicList();
+    Topic getTopicInfo(int topicNo);
+    int addTopicInfo(Topic topic);
+    int setTopicInfo(Topic topic);
+    int deleteTopicInfo(int topic_no);
 }
