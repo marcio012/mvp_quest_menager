@@ -8,8 +8,8 @@ import java.util.List;
 @Mapper
 public interface RespondenteMapper {
 
-    List getRespondenteList();
-    Respondente getRespondenteId(int id);
+    List getRespondenteListMapper();
+    Respondente getRespondenteIdMapper(int id);
     int addRespondente(Respondente respondente);
     int updateRespondente(Respondente respondente);
     int deleteRespondente(int id);

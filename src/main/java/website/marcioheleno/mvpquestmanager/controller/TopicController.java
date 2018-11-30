@@ -25,9 +25,7 @@ public class TopicController {
     }
 
     @RequestMapping(value="/{topicNo}", method=RequestMethod.GET)
-    public ResponseEntity getTopicInfo(
-            @PathVariable int topicNo
-    ) {
+    public ResponseEntity getTopicInfo(@PathVariable int topicNo) {
         HashMap result = new HashMap();
 
         result.put("data", topicService.getTopicInfo(topicNo));

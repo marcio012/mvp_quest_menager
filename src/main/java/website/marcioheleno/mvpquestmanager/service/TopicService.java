@@ -19,10 +19,6 @@ public class TopicService {
     }
 
     public Topic getTopicInfo(int topicNo) {
-
-        Topic topic = new Topic();
-        System.out.println(topic.getTopicNo());
-
         return topicMapper.getTopicInfo(topicNo);
     }
 

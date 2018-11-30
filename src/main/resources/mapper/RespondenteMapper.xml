@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="website.marcioheleno.mvpquestmanager.mapper.RespondenteMapper">
+
+    <select id="getRespondenteListMapper" resultType="Respondente">
+        SELECT *
+        FROM Respondente
+    </select>
+
+    <select id="getRespondenteIdMapper" resultType="Respondente" parameterType="int">
+        SELECT *
+        FROM Respondente
+        WHERE cd_numero_registro = #{cd_numero_registro}
+    </select>
+
+    <insert id="addTopicInfo" parameterType="Topic">
+        INSERT
+        INTO topic
+        (
+            topic_title,
+            topic_content
+        )
+        VALUES
+        (
+            #{topicTitle },
+            #{topicContent }
+        )
+    </insert>
+
+    <update id="setTopicInfo" parameterType="Topic">
+        UPDATE	topic
+        SET		topic_title = #{topicTitle }
+                ,		topic_content = #{topicContent }
+        WHERE	topic_no = #{topicNo }
+    </update>
+
+    <delete id="deleteTopicInfo" parameterType="int">
+        DELETE
+        FROM  topic
+        WHERE topic_no = #{topicNo }
+    </delete>
+
+</mapper>
+
+        <!--<configuration>-->
+
+        <!--<settings>-->
+        <!--&lt;!&ndash; Globally enables or disables any caches configured in any mapper under this configuration &ndash;&gt;-->
+        <!--<setting name="cacheEnabled" value="false"/>-->
+        <!--&lt;!&ndash; Sets the number of seconds the driver will wait for a response from the database &ndash;&gt;-->
+        <!--<setting name="defaultStatementTimeout" value="5"/>-->
+        <!--&lt;!&ndash; Enables automatic mapping from classic database column names A_COLUMN to camel case classic Java property names aColumn &ndash;&gt;-->
+        <!--<setting name="mapUnderscoreToCamelCase" value="true"/>-->
+        <!--&lt;!&ndash; Allows JDBC support for generated keys. A compatible driver is required.-->
+        <!--This setting forces generated keys to be used if set to true,-->
+        <!--as some drivers deny compatibility but still work &ndash;&gt;-->
+        <!--<setting name="useGeneratedKeys" value="true"/>-->
+        <!--</settings>-->
+
+        <!-- Continue editing here -->
+
+        <!--</configuration>-->

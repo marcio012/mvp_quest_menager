@@ -125,7 +125,7 @@ CREATE TABLE Educacao (
 
 CREATE TABLE Profissao (
   `cd_profissao` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `desc_profissao` VARCHAR(40) NOT NULL COMMENT 'Descrição da Profissão (Alfanumérico, Tamanho: 40). Valores possíveis: \n1. diretor e gerente\n2. profissionais cientistas e intelectuais\n3. tecnicos e profissões nível médio\n4. trabalhadores de apoio administrativo\n5. trabalhadores de serviços, vendedores comerciais e mercado\n6. trababalhores qualificados agropecuária floresta e caça\n7. trabalhadores qualificados artesãos\n8. operadores de instalações, maquinas e montagens\n9. ocupações elementares\n0. membros das FA`s policia bombeiros',
+  `desc_profissao` VARCHAR(255) NOT NULL COMMENT 'Descrição da Profissão (Alfanumérico, Tamanho: 40). Valores possíveis: \n1. diretor e gerente\n2. profissionais cientistas e intelectuais\n3. tecnicos e profissões nível médio\n4. trabalhadores de apoio administrativo\n5. trabalhadores de serviços, vendedores comerciais e mercado\n6. trababalhores qualificados agropecuária floresta e caça\n7. trabalhadores qualificados artesãos\n8. operadores de instalações, maquinas e montagens\n9. ocupações elementares\n0. membros das FA`s policia bombeiros',
   PRIMARY KEY (`cd_profissao`))
   ENGINE = InnoDB;
 
@@ -137,7 +137,7 @@ CREATE TABLE Profissao (
 
 CREATE TABLE Posicao_Trabalho (
   `cd_posicao_trabalho` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `desc_posicao_trabalho` VARCHAR(20) NOT NULL COMMENT 'Descrição da da Posição Trabalho (Alfanumérico, Tamanho: 20). Valores possíveis:  \n\n1. patrão\n2. diretor com chefia de funcionários\n3. diretor\n4. gerente com chefia de funcionários\n5. gerente\n6. quadro médio \n7. funcionário administrativo',
+  `desc_posicao_trabalho` VARCHAR(255) NOT NULL COMMENT 'Descrição da da Posição Trabalho (Alfanumérico, Tamanho: 20). Valores possíveis:  \n\n1. patrão\n2. diretor com chefia de funcionários\n3. diretor\n4. gerente com chefia de funcionários\n5. gerente\n6. quadro médio \n7. funcionário administrativo',
   PRIMARY KEY (`cd_posicao_trabalho`))
   ENGINE = InnoDB;
 
@@ -188,60 +188,91 @@ CREATE TABLE Respondente (
   Data Carga
  */
 -- --
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (12, 'AC', 'Acre');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (27, 'AL', 'Alagoas');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (13, 'AM', 'Amazonas');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (16, 'AP', 'Amapá');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (29, 'BA', 'Bahia');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (23, 'CE', 'Ceará');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (53, 'DF', 'Distrito Federal');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (32, 'ES', 'Espírito Santo');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (52, 'GO', 'Goiás');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (21, 'MA', 'Maranhão');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (31, 'MG', 'Minas Gerais');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (50, 'MS', 'Mato Grosso do Sul');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (51, 'MT', 'Mato Grosso');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (15, 'PA', 'Pará');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (25, 'PB', 'Paraíba');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (26, 'PE', 'Pernambuco');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (22, 'PI', 'Piauí');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (41, 'PR', 'Paraná');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (33, 'RJ', 'Rio de Janeiro');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (24, 'RN', 'Rio Grande do Norte');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (11, 'RO', 'Rondônia');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (14, 'RR', 'Roraima');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (43, 'RS', 'Rio Grande do Sul');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (42, 'SC', 'Santa Catarina');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (28, 'SE', 'Sergipe');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (35, 'SP', 'São Paulo');
-Insert Into uf (cd_uf, sigla_uf, nome)
-Values (17, 'TO', 'Tocantins');
+Insert Into uf (sigla_uf, nome) Values ('AC', 'Acre');
+Insert Into uf (sigla_uf, nome) Values ('AL', 'Alagoas');
+Insert Into uf (sigla_uf, nome) Values ('AM', 'Amazonas');
+Insert Into uf (sigla_uf, nome) Values ('AP', 'Amapá');
+Insert Into uf (sigla_uf, nome) Values ('BA', 'Bahia');
+Insert Into uf (sigla_uf, nome) Values ('CE', 'Ceará');
+Insert Into uf (sigla_uf, nome) Values ('DF', 'Distrito Federal');
+Insert Into uf (sigla_uf, nome) Values ('ES', 'Espírito Santo');
+Insert Into uf (sigla_uf, nome) Values ('GO', 'Goiás');
+Insert Into uf (sigla_uf, nome) Values ('MA', 'Maranhão');
+Insert Into uf (sigla_uf, nome) Values ('MG', 'Minas Gerais');
+Insert Into uf (sigla_uf, nome) Values ('MS', 'Mato Grosso do Sul');
+Insert Into uf (sigla_uf, nome) Values ('MT', 'Mato Grosso');
+Insert Into uf (sigla_uf, nome) Values ('PA', 'Pará');
+Insert Into uf (sigla_uf, nome) Values ('PB', 'Paraíba');
+Insert Into uf (sigla_uf, nome) Values ('PE', 'Pernambuco');
+Insert Into uf (sigla_uf, nome) Values ('PI', 'Piauí');
+Insert Into uf (sigla_uf, nome) Values ('PR', 'Paraná');
+Insert Into uf (sigla_uf, nome) Values ('RJ', 'Rio de Janeiro');
+Insert Into uf (sigla_uf, nome) Values ('RN', 'Rio Grande do Norte');
+Insert Into uf (sigla_uf, nome) Values ('RO', 'Rondônia');
+Insert Into uf (sigla_uf, nome) Values ('RR', 'Roraima');
+Insert Into uf (sigla_uf, nome) Values ('RS', 'Rio Grande do Sul');
+Insert Into uf (sigla_uf, nome) Values ('SC', 'Santa Catarina');
+Insert Into uf (sigla_uf, nome) Values ('SE', 'Sergipe');
+Insert Into uf (sigla_uf, nome) Values ('SP', 'São Paulo');
+Insert Into uf (sigla_uf, nome) Values ('TO', 'Tocantins');
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Cidade`
+-- -----------------------------------------------------
+
+Insert Into Cidade (nome_cidade) Values ('Nova Floresta');
+Insert Into Cidade (nome_cidade) Values ('Jaguaribe');
+Insert Into Cidade (nome_cidade) Values ('Fortaleza');
+Insert Into Cidade (nome_cidade) Values ('Caucaia');
+Insert Into Cidade (nome_cidade) Values ('Aquiraz');
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Municipio`
+-- -----------------------------------------------------
+
+Insert Into Municipio (nome_municipio) Values ('Municipinho');
+Insert Into Municipio (nome_municipio) Values ('Cabrobro');
+Insert Into Municipio (nome_municipio) Values ('Pindamunhagaba');
+Insert Into Municipio (nome_municipio) Values ('Letes friends');
+Insert Into Municipio (nome_municipio) Values ('Java é ruim');
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Fonte`
+-- -----------------------------------------------------
+
+
+INSERT INTO Fonte (cd_fonte, nm_descricao) VALUES (1, 'Casa Bahia');
+INSERT INTO Fonte (cd_fonte, nm_descricao) VALUES (2, 'Diario do Nordeste');
+INSERT INTO Fonte (cd_fonte, nm_descricao) VALUES (3 , 'Data Folha');
+INSERT INTO Fonte (cd_fonte, nm_descricao) VALUES (4, 'Ibope');
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Estado_Civil`
+-- -----------------------------------------------------
+
+
+INSERT INTO Estado_Civil (cd_estado_civil, desc_estado_civil) VALUES (1, 'solteiro');
+INSERT INTO Estado_Civil (cd_estado_civil, desc_estado_civil) VALUES (2, 'separado');
+INSERT INTO Estado_Civil (cd_estado_civil, desc_estado_civil) VALUES (3, 'divorciado');
+INSERT INTO Estado_Civil (cd_estado_civil, desc_estado_civil) VALUES (4, 'viuvo');
+
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Faixa_Etaria`
+-- -----------------------------------------------------
+
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (1, 'menos de 20 anos');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (2, '21 a 30 anos');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (3, '31 a 40 anos');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (4, '41 a 50 anos');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (5, '51 a 60 anos');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (6, '61 a 70 anos ');
+INSERT INTO Faixa_Etaria (cd_faixa_etaria, desc_idade) VALUES (7, 'mais de 70 anos');
+
 
 -- -----------------------------------------------------
 -- Data for table `mvp_pesquisa`.`Renda`
@@ -257,9 +288,38 @@ INSERT INTO Renda (cd_renda, desc_renda) VALUES (5, 'acima de R$ 5.347,00');
 -- -----------------------------------------------------
 -- Data for table `mvp_pesquisa`.`Educacao`
 -- -----------------------------------------------------
+
 INSERT INTO Educacao (cd_instrucao, desc_instrucao) VALUES (1, 'Analfabeto / Primário incompleto');
 INSERT INTO Educacao (cd_instrucao, desc_instrucao) VALUES (2, 'Primário completo / Ginásio incompleto');
 INSERT INTO Educacao (cd_instrucao, desc_instrucao) VALUES (3, 'Ginásio completo / Colégio incompleto');
 INSERT INTO Educacao (cd_instrucao, desc_instrucao) VALUES (4, 'Colégio completo / Superior incompleto');
 INSERT INTO Educacao (cd_instrucao, desc_instrucao) VALUES (5, 'Superio Completo');
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Profissao`
+-- -----------------------------------------------------
+
+INSERT INTO Profissao (desc_profissao) VALUES ('Diretor / Gerente');
+INSERT INTO Profissao (desc_profissao) VALUES ('Cientista / Intelectual');
+INSERT INTO Profissao (desc_profissao) VALUES ('Tecnicos / Nível Médio');
+INSERT INTO Profissao (desc_profissao) VALUES ('Administrativo / Apoio');
+INSERT INTO Profissao (desc_profissao) VALUES ('Tabalhadores de Serviços / Vendendores comerciais e mercado');
+INSERT INTO Profissao (desc_profissao) VALUES ('Agropecuária / Flores / Caça');
+INSERT INTO Profissao (desc_profissao) VALUES ('Ocupações elementares');
+INSERT INTO Profissao (desc_profissao) VALUES ('Membros da Forças Armadas / Policia / Bombeiros');
+
+
+
+-- -----------------------------------------------------
+-- Data for table `mvp_pesquisa`.`Posicao_Trabalho`
+-- -----------------------------------------------------
+
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (1, 'Patrão');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (2, 'Diretor / Chefia');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (3, 'Diretor');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (4, 'Gerente com chefia de Funcionarios');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (5, 'Gerente');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (6, 'Quadro Médio');
+INSERT INTO Posicao_Trabalho (cd_posicao_trabalho, desc_posicao_trabalho) VALUES (7, 'Funcionário Administrativo');
 

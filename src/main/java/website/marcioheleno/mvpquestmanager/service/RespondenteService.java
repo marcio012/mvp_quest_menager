@@ -14,22 +14,12 @@ public class RespondenteService {
     @Autowired
     RespondenteMapper respondenteMapper;
 
-    public List getRespondenteList() {
-        return respondenteMapper.getRespondenteList();
+    // get listar
+    public List getRespondenteServiceList() {
+        return respondenteMapper.getRespondenteListMapper();
     }
 
-    public Respondente getRespondentId(int id) {
-        Respondente respondente = new Respondente();
-        System.out.println(respondente);
+    public Respondente getRespondenteServiceId(int cdNumeroRegistro) {
+        return respondenteMapper.getRespondenteIdMapper(cdNumeroRegistro);
     }
-
-    public Topic getTopicInfo(int topicNo) {
-
-        Topic topic = new Topic();
-        System.out.println(topic.getTopicNo());
-
-        return topicMapper.getTopicInfo(topicNo);
-    }
-
-
 }
