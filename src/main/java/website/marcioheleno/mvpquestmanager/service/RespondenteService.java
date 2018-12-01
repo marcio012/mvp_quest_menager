@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import website.marcioheleno.mvpquestmanager.mapper.RespondenteMapper;
 import website.marcioheleno.mvpquestmanager.model.entity.Respondente;
-import website.marcioheleno.mvpquestmanager.model.entity.Topic;
 
 import java.util.List;
 
@@ -22,4 +21,18 @@ public class RespondenteService {
     public Respondente getRespondenteServiceId(int cdNumeroRegistro) {
         return respondenteMapper.getRespondenteIdMapper(cdNumeroRegistro);
     }
+
+    public int addRespondenteService(Respondente respondente) {
+        return respondenteMapper.addRespondenteMapper(respondente);
+    }
+
+    public int setRespondenteUpdateService(Respondente respondente){
+        return respondenteMapper.updateRespondenteMapper(respondente);
+    }
+
+    public int deleteRepresentanteService(int cdNumeroRegistro) {
+        return respondenteMapper.deleteRepresentanteMapper(cdNumeroRegistro);
+    }
+
+
 }

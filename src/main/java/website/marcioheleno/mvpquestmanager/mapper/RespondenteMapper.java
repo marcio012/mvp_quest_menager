@@ -10,8 +10,8 @@ public interface RespondenteMapper {
 
     List getRespondenteListMapper();
     Respondente getRespondenteIdMapper(int id);
-    int addRespondente(Respondente respondente);
-    int updateRespondente(Respondente respondente);
-    int deleteRespondente(int id);
+    int addRespondenteMapper(Respondente respondente);
+    int updateRespondenteMapper(Respondente respondente);
+    int deleteRepresentanteMapper(int id);
 
 }

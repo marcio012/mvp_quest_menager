@@ -14,50 +14,87 @@
         WHERE cd_numero_registro = #{cd_numero_registro}
     </select>
 
-    <insert id="addTopicInfo" parameterType="Topic">
+    <insert id="addRespondenteMapper" parameterType="Respondente">
         INSERT
-        INTO topic
+        INTO Respondente
         (
-            topic_title,
-            topic_content
-        )
+          cd_individuo,
+          cd_fk_tab_fonte, cd_cpf, nome, email, telefone_fixo,
+          telefone_cel, cep, cd_fk_tab_estado, cd_fk_tab_cidade,
+          cd_fk_tab_municipio, sexo, data_nascimento,
+          cd_fk_tab_faixa_etaria, cd_fk_tab_estado_civil,
+          classe_social, cd_fk_tab_educacao, cd_fk_tab_renda,
+          cd_fk_tab_profissao, cd_fk_posicao_trabalho,
+          moradia, moradia_lazer, auxiliar_do_lar, possui_carro,
+          raca
+         )
         VALUES
         (
-            #{topicTitle },
-            #{topicContent }
+            #{cdIndividuo },
+            #{cdFkTabFonte },
+            #{cdCpf },
+            #{nome },
+            #{email },
+            #{telefoneFixo },
+            #{telefoneCel },
+            #{cep },
+            #{cdFkTabEstado},
+            #{cdFkTabCidade},
+            #{cdFkTabMunicipio},
+            #{sexo},
+            #{dataNascimento},
+            #{cdFkTabFaixaEtaria},
+            #{cdFkTabEstadoCivil},
+            #{classeSocial},
+            #{cdFkTabEducacao},
+            #{cdFkTabRenda},
+            #{cdFkTabProfissao},
+            #{cdFkPosicaoTrabalho},
+            #{moradia},
+            #{moradiaLazer},
+            #{auxiliarDoLar},
+            #{possuiCarro},
+            #{raca}
         )
     </insert>
 
-    <update id="setTopicInfo" parameterType="Topic">
-        UPDATE	topic
-        SET		topic_title = #{topicTitle }
-                ,		topic_content = #{topicContent }
-        WHERE	topic_no = #{topicNo }
+
+
+    <update id="updateRespondenteMapper" parameterType="Respondente">
+        UPDATE	Respondente
+        SET
+            cd_individuo = #{cdIndividuo},
+            cd_fk_tab_fonte = #{cdFkTabFonte },
+            cd_cpf = #{cdCpf },
+            nome = #{nome },
+            email = #{email },
+            telefone_fixo = #{telefoneFixo},
+            telefone_cel = #{telefoneCel},
+            cep = #{cep},
+            cd_fk_tab_estado = #{cdFkTabEstado},
+            cd_fk_tab_cidade = #{cdFkTabCidade},
+            cd_fk_tab_municipio = #{cdFkTabMunicipio},
+            sexo = #{sexo},
+            data_nascimento = #{dataNascimento},
+            cd_fk_tab_faixa_etaria = #{cdFkTabFaixaEtaria},
+            cd_fk_tab_estado_civil = #{cdFkTabEstadoCivil},
+            classe_social = #{classeSocial},
+            cd_fk_tab_educacao = #{cdFkTabEducacao},
+            cd_fk_tab_renda = #{cdFkTabRenda},
+            cd_fk_tab_profissao = #{cdFkTabProfissao},
+            cd_fk_posicao_trabalho = #{cdFkPosicaoTrabalho},
+            moradia = #{moradia},
+            moradia_lazer = #{moradiaLazer},
+            auxiliar_do_lar = #{auxiliarDoLar},
+            possui_carro = #{possuiCarro},
+            raca = #{raca}
+        WHERE	cd_numero_registro = #{cdNumeroRegistro }
     </update>
 
-    <delete id="deleteTopicInfo" parameterType="int">
+    <delete id="deleteRepresentanteMapper" parameterType="int">
         DELETE
-        FROM  topic
-        WHERE topic_no = #{topicNo }
+        FROM  Respondente
+        WHERE cd_numero_registro = #{cdNumeroRegistro }
     </delete>
 
 </mapper>
-
-        <!--<configuration>-->
-
-        <!--<settings>-->
-        <!--&lt;!&ndash; Globally enables or disables any caches configured in any mapper under this configuration &ndash;&gt;-->
-        <!--<setting name="cacheEnabled" value="false"/>-->
-        <!--&lt;!&ndash; Sets the number of seconds the driver will wait for a response from the database &ndash;&gt;-->
-        <!--<setting name="defaultStatementTimeout" value="5"/>-->
-        <!--&lt;!&ndash; Enables automatic mapping from classic database column names A_COLUMN to camel case classic Java property names aColumn &ndash;&gt;-->
-        <!--<setting name="mapUnderscoreToCamelCase" value="true"/>-->
-        <!--&lt;!&ndash; Allows JDBC support for generated keys. A compatible driver is required.-->
-        <!--This setting forces generated keys to be used if set to true,-->
-        <!--as some drivers deny compatibility but still work &ndash;&gt;-->
-        <!--<setting name="useGeneratedKeys" value="true"/>-->
-        <!--</settings>-->
-
-        <!-- Continue editing here -->
-
-        <!--</configuration>-->

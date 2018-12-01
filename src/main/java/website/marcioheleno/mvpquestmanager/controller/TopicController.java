@@ -32,10 +32,8 @@ public class TopicController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-        @RequestMapping(value="", method=RequestMethod.POST)
-    public ResponseEntity addTopicInfo(
-            @RequestBody Topic topic
-    ){
+    @RequestMapping(value="", method=RequestMethod.POST)
+    public ResponseEntity addTopicInfo(@RequestBody Topic topic ){
         HashMap result = new HashMap();
 
         topicService.addTopicInfo(topic);
@@ -45,10 +43,7 @@ public class TopicController {
     }
 
     @RequestMapping(value="{topicNo}", method=RequestMethod.PUT)
-    public ResponseEntity setTopicInfo(
-            @PathVariable int topicNo,
-            @RequestBody Topic topic
-    ){
+    public ResponseEntity setTopicInfo(@PathVariable int topicNo, @RequestBody Topic topic){
         HashMap result = new HashMap();
 
         topic.setTopicNo(topicNo);
