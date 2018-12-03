@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="website.marcioheleno.mvpquestmanager.mapper.UserMapper">
+
+    <select id="getUserAdminListMapper" resultType="UserAdmin">
+        SELECT *
+        FROM Useradmin
+    </select>
+
+
+    <select id="getUserAdminByNameMapper" resultType="UserAdmin" parameterType="UserAdmin">
+        SELECT *
+        FROM Useradmin
+        WHERE username = #{username }
+    </select>
+
+
+    <select id="getUserAdminIdMapper" resultType="UserAdmin" parameterType="int">
+        SELECT *
+        FROM Useradmin
+        WHERE id = #{id }
+    </select>
+
+    <insert id="addUserMapper" useGeneratedKeys="true" keyProperty="id" parameterType="UserAdmin">
+        INSERT
+        INTO  UserAdmin
+        (
+              username,
+              password,
+              role
+        )
+        VALUES
+        (
+            #{id },
+            #{username },
+            #{password },
+            #{role }
+        )
+    </insert>
+
+</mapper>

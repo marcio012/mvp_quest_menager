@@ -1,10 +1,7 @@
 package website.marcioheleno.mvpquestmanager.model.entity;
 
-import javafx.scene.input.DataFormat;
 import lombok.Data;
 
-import java.sql.Timestamp;
-import java.util.Date;
 
 @Data
 public class Respondente {
@@ -22,7 +19,7 @@ public class Respondente {
     private int cdFkTabCidade;
     private int cdFkTabMunicipio;
     private int sexo;
-    private Timestamp dataNascimento;
+    private String dataNascimento;
     private int cdFkTabFaixaEtaria;
     private int cdFkTabEstadoCivil;
     private Character classeSocial;

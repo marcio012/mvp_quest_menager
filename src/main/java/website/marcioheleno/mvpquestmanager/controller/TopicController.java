@@ -10,12 +10,14 @@ import website.marcioheleno.mvpquestmanager.model.entity.Topic;
 import java.util.HashMap;
 
 @RestController
+@CrossOrigin(origins = "", maxAge = 3600)
 @RequestMapping(value = "/topics")
 public class TopicController {
 
     @Autowired
     TopicService topicService;
 
+    @CrossOrigin(origins = "*", maxAge = 3600)
     @RequestMapping(value="", method = RequestMethod.GET)
     public ResponseEntity getTopicList(){
         HashMap result = new HashMap();

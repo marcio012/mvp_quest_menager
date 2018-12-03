@@ -23,6 +23,7 @@ public class RespondenteController {
     public ResponseEntity getRespondentesListController () {
         HashMap listCorrespondente = new HashMap();
 
+        log.info("acessando respondentes via get");
         listCorrespondente.put("data", respondenteService.getRespondenteServiceList());
         return new ResponseEntity<>(listCorrespondente, HttpStatus.OK);
     }
