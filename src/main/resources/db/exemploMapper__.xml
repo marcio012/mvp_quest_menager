@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="br.unifor.biblioteca.repository.mapper.ObraMapper">
+
+    <resultMap id="ObraMap" type="br.unifor.biblioteca.repository.entity.Obra">
+        <result property="codigo" column="codigo_obra" jdbcType="INTEGER" />
+        <result property="nome" column="nome_bibliografia" jdbcType="VARCHAR"/>
+        <result property="tipoBibliografia" column="tipo_bibliografia" jdbcType="VARCHAR"/>
+        <result property="catalogoExterno" column="catalogo_externo" jdbcType="VARCHAR"/>
+        <result property="cdu" column="cdu" jdbcType="VARCHAR" />
+        <result property="cutter" column="cutter" jdbcType="VARCHAR" />
+        <result property="tipoObra" column="tipo_obra" jdbcType="VARCHAR" />
+        <result property="ultimaEdicao" column="ultima_edicao" jdbcType="VARCHAR" />
+        <result property="titulo" column="titulo_obra" jdbcType="VARCHAR" />
+
+        <association property="obraDivisao" javaType="br.unifor.biblioteca.repository.entity.ObraDivisao">
+            <id property="codigo" column="codigo_divisao" jdbcType="INTEGER" />
+            <result property="descricao" column="desc_divisao" jdbcType="VARCHAR" />
+            <result property="titulo" column="titulo_divisao" jdbcType="VARCHAR" />
+            <result property="dataEdicao" column="data_edicao" jdbcType="TIMESTAMP" />
+            <result property="codigoConteudo" column="codigo_conteudo" jdbcType="INTEGER" />
+            <result property="codigoConteudoThumb" column="codigo_conteudo_thumb" jdbcType="INTEGER" />
+            <result property="linkPreview" column="link_preview" jdbcType="VARCHAR" />
+            <result property="linkVideo" column="link_video" jdbcType="VARCHAR" />
+        </association>
+
+    </resultMap>
+
+    <resultMap id="AutorObraMap" type="br.unifor.biblioteca.repository.entity.AutorObra" >
+        <result property="nome" column="nome_autor" jdbcType="VARCHAR" />
+    </resultMap>
+
+    <resultMap id="ObraDivisaoMap" type="br.unifor.biblioteca.repository.entity.ObraDivisao" >
+        <result property="descricao" column="desc_divisao" jdbcType="VARCHAR" />
+        <result property="total" column="total_divisao" jdbcType="INTEGER" />
+        <result property="disponiveisEmprestimo" column="disp_emprestimo" jdbcType="INTEGER" />
+        <result property="cativo" column="cativo" jdbcType="INTEGER" />
+        <result property="outros" column="outros" jdbcType="INTEGER" />
+    </resultMap>
+
+
+    <select id="listarPorDisciplina" parameterType="map" resultMap="ObraMap">
+	<![CDATA[
+        select (Case
+                    When Cd_Obra = 999999 Then regexp_replace(ds_obra_provisoria, '<[^>]*>', '')
+                    When Fl_catalogo_externo = 'S' Then s_bc_abnt_desc_obra_digital(cd_obra)
+                    Else s_bc_abnt_descreve_obra(cd_obra,cd_divisao)
+            End) nome_bibliografia
+
+                , a.cd_obra codigo_obra
+                , decode(a.tp_bibliografia, 1, 'Básica', 2, 'Complementar', null) tipo_bibliografia,
+               a.fl_catalogo_externo catalogo_externo
+        from ca.bibliografia_disciplina a
+        where a.tp_arquivo = 1
+          and a.cd_disciplina = UPPER (#{codigoDisciplina})
+          and s_semestre(a.cd_periodo) in (select max (s_semestre(b.cd_periodo))
+                                           from ca.texto_disciplina b
+                                                   , ca.projeto_disciplina c
+                                           where b.tp_arquivo = a.tp_arquivo
+                                             and b.cd_disciplina = a.cd_disciplina
+                                             and c.cd_disciplina = b.cd_disciplina
+                                             and c.tp_arquivo = b.tp_arquivo
+                                             and c.cd_periodo = b.cd_periodo
+                                             and c.st_situacao = 'A')
+
+
+        order by a.tp_bibliografia
+                , a.nr_linha
+        ]]>
+	</select>
+
+    <select id="pesquisarInformacoesObra" parameterType="map" resultMap="ObraMap">
+        select obr.cd_obra codigo_obra
+                , s_bc_descreve_dominio(2,obr.tp_obra) tipo_obra
+                , obr.cd_cdu cdu
+                , obr.cd_cutter cutter
+                , s_bc_descreve_ultima_edicao (obr.cd_obra) ultima_edicao
+                , tit.ds_titulo||dom.ds_apresentacao titulo_obra
+        from bc.titulo tit
+                , bc.tabela_dominios dom
+                , bc.titulo_obra tio
+                , bc.obra obr
+        where to_number(#{codigoObra}) = tio.cd_obra
+          and obr.cd_obra = tio.cd_obra
+          and tio.cd_var_titulo_obra = (select max(vob.cd_var_titulo_obra)
+                                        from bc.edicao edi
+                                                , bc.variacao_obra vob
+                                        where to_number(#{codigoObra}) = vob.cd_obra
+                                          and vob.cd_obra = edi.cd_obra (+)
+                                          and vob.cd_var_edicao_obra = edi.cd_var_edicao_obra (+)
+                                          and nvl(lpad(to_char(nvl(edi.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edi.nr_edicao,'0'),4,'0'),'00000000') = (select nvl(max(lpad(to_char(nvl(edu.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edu.nr_edicao,'0'),4,'0')),'00000000')
+                                                                                                                                                       from bc.variacao_obra vou
+                                                                                                                                                               , bc.edicao edu
+                                                                                                                                                       where to_number(#{codigoObra}) = edu.cd_obra
+                                                                                                                                                         and edu.cd_obra = vou.cd_obra
+                                                                                                                                                         and edu.cd_var_edicao_obra = vou.cd_var_edicao_obra))
+          and tio.tp_titulo not in (2)
+          and 10 = dom.cd_tabela
+          and tio.tp_titulo = dom.cd_item
+          and tio.cd_titulo = tit.cd_titulo
+        order by tio.sq_titulo
+                , tio.tp_titulo
+    </select>
+
+    <select id="pesquisarInformacoesObraExterno" parameterType="map" resultMap="ObraMap">
+        select fco.id_fornecedor_catalogo_obra codigo_obra,
+               s_bc_descreve_dominio(2,mco.tp_obra) tipo_obra,
+               msd.cd_cdu cdu,
+               msd.cd_cutter cutter,
+               decode(msd.nm_editora,null,null,'Editora: '||msd.nm_editora)||
+               decode(msd.nr_edicao,null,null,decode(msd.nm_editora,null,null,', ')||msd.nr_edicao)||
+               decode(msd.nm_local,null,null,decode(msd.nm_editora||msd.nr_edicao,null,null,', ')||msd.nm_local)||
+               decode(msd.nr_ano,null,null,decode(msd.nm_editora||msd.nr_edicao||msd.nm_local,null,null,', ')||to_char(msd.nr_ano)) ultima_edicao,
+               msd.ds_titulo||decode(msd.ds_subtitulo,null,null,' : '||msd.ds_subtitulo) titulo_obra
+        from (select to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'CDU'),1,4000)) cd_cdu,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'CUTTER'),1,4000)) cd_cutter,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'TÍTULO PRINCIPAL',' / '),1,4000)) ds_titulo,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'SUBTÍTULO TÍTULO PRINCIPAL'),1,4000)) ds_subtitulo,
+                     case instr(to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO NÚMERO',' / '),1,4000)),'ed')
+                         when 0 then
+                                 to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO NÚMERO',' / '),1,4000))||' ed.'
+                         else
+                             to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO NÚMERO',' / '),1,4000))
+                         end nr_edicao,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO LOCAL',' / '),1,4000)) nm_local,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO EDITORA',' / '),1,4000)) nm_editora,
+                     to_char(substr(s_bc_ve_dado_obra_catalogo(#{codigoObra},'EDIÇÃO ANO PUBLICAÇÃO',' / '),1,4000)) nr_ano
+              from sys.dual) msd,
+             bc.metadado_configuracao mco,
+             bc.fornecedor_catalogo fct,
+             bc.fornecedor_catalogo_obra fco
+        where #{codigoObra}                  = fco.id_fornecedor_catalogo_obra
+          and fco.id_fornecedor_catalogo   = fct.id_fornecedor_catalogo
+          and fct.id_metadado_configuracao = mco.id_metadado_configuracao
+    </select>
+
+
+    <select id="listarAutorObra" parameterType="map" resultMap="AutorObraMap">
+        select decode(tau.ds_apresentacao,null,s_bc_inverte_autor(aut.nm_autoridade),
+                      decode(tau.fg_apresentacao_antes,'S',tau.ds_apresentacao||' '||s_bc_inverte_autor(aut.nm_autoridade),
+                             s_bc_inverte_autor(aut.nm_autoridade)||' '||tau.ds_apresentacao)) nome_autor
+        from bc.autoridade aut
+                , bc.tipo_autoridade tau
+                , bc.autoridade_obra auo
+        where to_number(#{codigoObra}) = auo.cd_obra
+          and auo.cd_var_autoridade_obra = (select max(vob.cd_var_autoridade_obra)
+                                            from bc.edicao edi
+                                                    , bc.variacao_obra vob
+                                            where to_number(#{codigoObra}) = vob.cd_obra
+                                              and vob.cd_obra = edi.cd_obra (+)
+                                              and vob.cd_var_edicao_obra = edi.cd_var_edicao_obra (+)
+                                              and nvl(lpad(to_char(nvl(edi.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edi.nr_edicao,'0'),4,'0'),'00000000') = (select nvl(max(lpad(to_char(nvl(edu.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edu.nr_edicao,'0'),4,'0')),'00000000')
+                                                                                                                                                           from bc.variacao_obra vou
+                                                                                                                                                                   , bc.edicao edu
+                                                                                                                                                           where to_number(#{codigoObra}) = edu.cd_obra
+                                                                                                                                                             and edu.cd_obra = vou.cd_obra
+                                                                                                                                                             and edu.cd_var_edicao_obra = vou.cd_var_edicao_obra))
+          and auo.tp_autoridade not in (5)
+          and auo.tp_autoridade = tau.tp_autoridade
+          and auo.cd_autoridade = aut.cd_autoridade
+        order by auo.sq_autoridade
+                , auo.tp_autoridade
+    </select>
+
+    <select id="listarAutorObraExterno" parameterType="map" resultMap="AutorObraMap">
+        select to_char(s_bc_ve_dado_obra_catalogo(#{codigoObra},'AUTORIDADE')) nome_autor  from dual
+        union all
+        select to_char(aut.ds_metadado_subcampo_dado)||
+               decode((select to_char(snu.ds_metadado_subcampo_dado)
+                       from table(ca.pk_biblioteca.f_bc_ve_dado_obra_catalogo(#{codigoObra},'AUTORIDADE SECUNDÁRIA TIPO',aut.sq_metadado_subcampo_dado)) snu),null,null,
+                      ' ('||(select to_char(snu.ds_metadado_subcampo_dado)
+                             from table(ca.pk_biblioteca.f_bc_ve_dado_obra_catalogo(#{codigoObra},'AUTORIDADE SECUNDÁRIA TIPO',aut.sq_metadado_subcampo_dado)) snu)||')') nome_autor
+        from table(ca.pk_biblioteca.f_bc_ve_dado_obra_catalogo(#{codigoObra},
+                                                               'AUTORIDADE SECUNDÁRIA')) aut
+    </select>
+
+
+    <select id="listarAssunto" parameterType="map" resultType="java.lang.String">
+        select ass.ds_assunto
+        from bc.assunto ass
+                , bc.assunto_obra aso
+        where to_number(#{codigoObra}) = aso.cd_obra
+          and aso.cd_var_assunto_obra = (select max(vob.cd_var_assunto_obra)
+                                         from bc.edicao edi
+                                                 , bc.variacao_obra vob
+                                         where to_number(#{codigoObra}) = vob.cd_obra
+                                           and vob.cd_obra = edi.cd_obra (+)
+                                           and vob.cd_var_edicao_obra = edi.cd_var_edicao_obra (+)
+                                           and nvl(lpad(to_char(nvl(edi.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edi.nr_edicao,'0'),4,'0'),'00000000') = (select nvl(max(lpad(to_char(nvl(edu.nr_ano_publicacao,0)),4,'0')||lpad(nvl(edu.nr_edicao,'0'),4,'0')),'00000000')
+                                                                                                                                                        from bc.variacao_obra vou,
+                                                                                                                                                             bc.edicao edu
+                                                                                                                                                        where to_number(#{codigoObra}) = edu.cd_obra
+                                                                                                                                                          and edu.cd_obra = vou.cd_obra
+                                                                                                                                                          and edu.cd_var_edicao_obra = vou.cd_var_edicao_obra))
+          and aso.cd_assunto = ass.cd_assunto
+        order by aso.sq_assunto
+    </select>
+
+    <select id="listarAssuntoExterno" parameterType="map" resultType="java.lang.String">
+        select s_bc_ve_dado_obra_catalogo(#{codigoObra},'ASSUNTO',' / ') ds_assunto from dual
+    </select>
+
+    <select id="pesquisarCodigoISBN" parameterType="map" resultType="java.lang.String">
+        select (dom.ds_apresentacao||' '||ceo.nr_externo)
+        from bc.tabela_dominios dom
+                , bc.codigo_externo_obra ceo
+        where to_number(#{codigoObra}) = ceo.cd_obra
+          and 7 = dom.cd_tabela
+          and ceo.tp_externo = dom.cd_item
+        order by 1
+    </select>
+
+    <select id="pesquisarCodigoISBNExterno" parameterType="map" resultType="java.lang.String">
+        select s_bc_ve_dado_obra_catalogo(#{codigoObra},'ISBN',' / ') from dual
+    </select>
+
+    <select id="pesquisarNotaObra" parameterType="map" resultType="java.lang.String">
+        select nota_descricao || ' ' || nota_conteudo
+        from (select decode(nto.sq_nota,(select min(ntm.sq_nota)
+                                         from bc.nota_obra ntm
+                                         where nto.cd_obra = ntm.cd_obra
+                                           and nto.tp_nota = ntm.tp_nota),s_bc_descreve_dominio(14,nto.tp_nota), null) nota_descricao
+                      , nto.ds_nota nota_conteudo
+              from bc.nota_obra nto
+              where to_number(#{codigoObra}) = nto.cd_obra
+                and nto.tp_nota = 108
+              order by 1)
+    </select>
+
+    <select id="listarObraDivisaoVolumes" parameterType="map" resultMap="ObraDivisaoMap">
+        select distinct
+            upper(tdv.ds_tp_divisao1||lpad(dob.ds_divisao1,15,' ')||
+                  tdv.ds_tp_divisao2||lpad(dob.ds_divisao2,15,' ')||
+                  tdv.ds_tp_divisao3||lpad(dob.ds_divisao3,15,' ')||
+                  tdv.ds_tp_divisao4||lpad(dob.ds_divisao4,15,' ')||
+                  tdv.ds_tp_divisao5||lpad(dob.ds_divisao5,15,' '))
+                , s_bc_abnt_descreve_obra(reg.cd_obra,reg.cd_divisao)
+                , decode(reg.cd_divisao,0,'Volume único',
+                         tdv.ds_tp_divisao1||' '||dob.ds_divisao1||' '||
+                         tdv.ds_tp_divisao2||' '||dob.ds_divisao2||' '||
+                         tdv.ds_tp_divisao3||' '||dob.ds_divisao3||' '||
+                         tdv.ds_tp_divisao4||' '||dob.ds_divisao4||' '||
+                         tdv.ds_tp_divisao5||' '||dob.ds_divisao5) desc_divisao
+                , (select nvl(count(*),0)
+                   from bc.registro ret
+                   where reg.cd_obra = ret.cd_obra
+                     and reg.cd_divisao = ret.cd_divisao
+                     and 4 != ret.tp_st_registro) total_divisao
+                , (select nvl(count(*),0)
+                   from bc.registro ree
+                   where reg.cd_obra = ree.cd_obra
+                     and reg.cd_divisao = ree.cd_divisao
+                     and 1163 = ree.cd_centro_custo
+                     and 1 = ree.tp_st_registro
+                     and 'N' = ree.fg_cativo) disp_emprestimo
+                , (select nvl(count(*),0)
+                   from bc.registro rec
+                   where reg.cd_obra = rec.cd_obra
+                     and reg.cd_divisao = rec.cd_divisao
+                     and 1163 = rec.cd_centro_custo
+                     and 1 = rec.tp_st_registro
+                     and 'S' = rec.fg_cativo) cativo
+                , (select nvl(count(*),0)
+                   from bc.registro ret
+                   where reg.cd_obra = ret.cd_obra
+                     and reg.cd_divisao = ret.cd_divisao
+                     and 4 != ret.tp_st_registro
+                     and 1163 != ret.cd_centro_custo) outros
+        from bc.tipo_divisao tdv
+                , bc.divisao_obra dob
+                , bc.registro reg
+        where to_number(#{codigoObra}) = reg.cd_obra
+          and 4 != reg.tp_st_registro
+          and reg.cd_obra = dob.cd_obra    (+)
+          and reg.cd_divisao = dob.cd_divisao (+)
+          and dob.tp_divisao = tdv.tp_divisao (+)
+        order by 1,2
+    </select>
+
+    <select id="buscarObraPorRegistro" parameterType="map" resultMap="ObraMap">
+        select ob.cd_obra codigo_obra,
+               s_bc_descreve_dominio(2,ob.tp_obra) tipo_obra,
+               s_bc_monta_titulo_cabecalho(ob.cd_obra) titulo_obra
+        from bc.obra ob,
+             bc.registro re
+        where to_number(#{valor}) = re.nr_registro
+          and re.cd_obra = ob.cd_obra
+    </select>
+</mapper>

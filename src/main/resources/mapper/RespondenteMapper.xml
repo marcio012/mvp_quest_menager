@@ -4,14 +4,94 @@
 <mapper namespace="website.marcioheleno.mvpquestmanager.mapper.RespondenteMapper">
 
     <select id="getRespondenteListMapper" resultType="Respondente">
-        SELECT *
-        FROM Respondente
+      SELECT
+             Respondente.cd_numero_registro as "id",
+             Respondente.cd_individuo as "codUser",
+             Respondente.cd_cpf as "cpf",
+             Respondente.nome as "nome",
+             Respondente.email,
+             Respondente.telefone_fixo,
+             Respondente.telefone_cel,
+             Respondente.cep,
+             Respondente.sexo,
+             Respondente.data_nascimento,
+             Respondente.moradia,
+             Respondente.moradia_lazer,
+             Respondente.auxiliar_do_lar,
+             Respondente.possui_carro,
+             Respondente.raca,
+             Respondente.classe_social,
+             Municipio.nome_municipio as municipio,
+             Fonte.nm_descricao as "nomeFonte",
+             UF.nome as "estado",
+             Cidade.nome_cidade as "cidade",
+             Faixa_Etaria.desc_idade as "faixaEtaria",
+             Estado_Civil.desc_estado_civil as "estadoCivil",
+             Educacao.desc_instrucao as "nivelEducacao",
+             Renda.desc_renda as "rendaFamilia",
+             Profissao.desc_profissao as "profissao",
+             Posicao_Trabalho.desc_posicao_trabalho as "cargo"
+
+        FROM
+            Respondente
+        JOIN Fonte on cd_fk_tab_fonte = cd_fonte
+        JOIN UF on cd_fk_tab_estado = cd_uf
+        JOIN Cidade on cd_fk_tab_cidade = cd_cidade
+        JOIN Municipio on cd_fk_tab_municipio = cd_municipio
+        JOIN Faixa_Etaria on cd_fk_tab_faixa_etaria = cd_faixa_etaria
+        JOIN Estado_Civil on cd_fk_tab_estado_civil = cd_estado_civil
+        JOIN Educacao on cd_fk_tab_educacao = cd_instrucao
+        JOIN Renda on cd_fk_tab_renda = cd_renda
+        JOIN Profissao on cd_fk_tab_profissao = cd_profissao
+        JOIN Posicao_Trabalho on cd_fk_posicao_trabalho = cd_posicao_trabalho
+
     </select>
 
     <select id="getRespondenteIdMapper" resultType="Respondente" parameterType="int">
-        SELECT *
-        FROM Respondente
+
+        SELECT
+            Respondente.cd_numero_registro as "id",
+            Respondente.cd_individuo as "codUser",
+            Respondente.cd_cpf as "cpf",
+            Respondente.nome as "nome",
+            Respondente.email,
+            Respondente.telefone_fixo,
+            Respondente.telefone_cel,
+            Respondente.cep,
+            Respondente.sexo,
+            Respondente.data_nascimento,
+            Respondente.moradia,
+            Respondente.moradia_lazer,
+            Respondente.auxiliar_do_lar,
+            Respondente.possui_carro,
+            Respondente.raca,
+            Respondente.classe_social,
+            Municipio.nome_municipio as municipio,
+            Fonte.nm_descricao as "nomeFonte",
+            UF.nome as "estado",
+            Cidade.nome_cidade as "cidade",
+            Faixa_Etaria.desc_idade as "faixaEtaria",
+            Estado_Civil.desc_estado_civil as "estadoCivil",
+            Educacao.desc_instrucao as "nivelEducacao",
+            Renda.desc_renda as "rendaFamilia",
+            Profissao.desc_profissao as "profissao",
+            Posicao_Trabalho.desc_posicao_trabalho as "cargo"
+
+        FROM
+            Respondente
+                JOIN Fonte on cd_fk_tab_fonte = cd_fonte
+                JOIN UF on cd_fk_tab_estado = cd_uf
+                JOIN Cidade on cd_fk_tab_cidade = cd_cidade
+                JOIN Municipio on cd_fk_tab_municipio = cd_municipio
+                JOIN Faixa_Etaria on cd_fk_tab_faixa_etaria = cd_faixa_etaria
+                JOIN Estado_Civil on cd_fk_tab_estado_civil = cd_estado_civil
+                JOIN Educacao on cd_fk_tab_educacao = cd_instrucao
+                JOIN Renda on cd_fk_tab_renda = cd_renda
+                JOIN Profissao on cd_fk_tab_profissao = cd_profissao
+                JOIN Posicao_Trabalho on cd_fk_posicao_trabalho = cd_posicao_trabalho
+
         WHERE cd_numero_registro = #{cd_numero_registro}
+
     </select>
 
     <insert id="addRespondenteMapper" parameterType="Respondente">
@@ -30,26 +110,26 @@
          )
         VALUES
         (
-            #{cdIndividuo },
-            #{cdFkTabFonte },
-            #{cdCpf },
+            #{cod },
+            #{nomeFonte },
+            #{cpf },
             #{nome },
             #{email },
             #{telefoneFixo },
             #{telefoneCel },
             #{cep },
-            #{cdFkTabEstado},
-            #{cdFkTabCidade},
-            #{cdFkTabMunicipio},
-            #{sexo},
-            #{dataNascimento},
-            #{cdFkTabFaixaEtaria},
-            #{cdFkTabEstadoCivil},
-            #{classeSocial},
-            #{cdFkTabEducacao},
-            #{cdFkTabRenda},
-            #{cdFkTabProfissao},
-            #{cdFkPosicaoTrabalho},
+            #{estado },
+            #{cidade },
+            #{municipio },
+            #{sexo },
+            #{dataNascimento },
+            #{faixaEtaria },
+            #{estadoCivil },
+            #{classeSocial },
+            #{nivelEducacao },
+            #{rendaFamilia },
+            #{profissao},
+            #{cargo},
             #{moradia},
             #{moradiaLazer},
             #{auxiliarDoLar},
@@ -63,38 +143,38 @@
     <update id="updateRespondenteMapper" parameterType="Respondente">
         UPDATE	Respondente
         SET
-            cd_individuo = #{cdIndividuo},
-            cd_fk_tab_fonte = #{cdFkTabFonte },
-            cd_cpf = #{cdCpf },
+            cd_individuo = #{cod },
+            cd_fk_tab_fonte = #{nomeFonte },
+            cd_cpf = #{cpf },
             nome = #{nome },
             email = #{email },
             telefone_fixo = #{telefoneFixo},
             telefone_cel = #{telefoneCel},
             cep = #{cep},
-            cd_fk_tab_estado = #{cdFkTabEstado},
-            cd_fk_tab_cidade = #{cdFkTabCidade},
-            cd_fk_tab_municipio = #{cdFkTabMunicipio},
+            cd_fk_tab_estado = #{estado},
+            cd_fk_tab_cidade = #{cidade},
+            cd_fk_tab_municipio = #{municipio},
             sexo = #{sexo},
             data_nascimento = #{dataNascimento},
-            cd_fk_tab_faixa_etaria = #{cdFkTabFaixaEtaria},
-            cd_fk_tab_estado_civil = #{cdFkTabEstadoCivil},
+            cd_fk_tab_faixa_etaria = #{faixaEtaria },
+            cd_fk_tab_estado_civil = #{estadoCivil },
             classe_social = #{classeSocial},
-            cd_fk_tab_educacao = #{cdFkTabEducacao},
-            cd_fk_tab_renda = #{cdFkTabRenda},
-            cd_fk_tab_profissao = #{cdFkTabProfissao},
-            cd_fk_posicao_trabalho = #{cdFkPosicaoTrabalho},
+            cd_fk_tab_educacao = #{nivelEducacao},
+            cd_fk_tab_renda = #{rendaFamilia},
+            cd_fk_tab_profissao = #{profissao},
+            cd_fk_posicao_trabalho = #{cargo},
             moradia = #{moradia},
             moradia_lazer = #{moradiaLazer},
             auxiliar_do_lar = #{auxiliarDoLar},
             possui_carro = #{possuiCarro},
             raca = #{raca}
-        WHERE	cd_numero_registro = #{cdNumeroRegistro }
+        WHERE	cd_numero_registro = #{id }
     </update>
 
     <delete id="deleteRepresentanteMapper" parameterType="int">
         DELETE
         FROM  Respondente
-        WHERE cd_numero_registro = #{cdNumeroRegistro }
+        WHERE cd_numero_registro = #{id }
     </delete>
 
 </mapper>

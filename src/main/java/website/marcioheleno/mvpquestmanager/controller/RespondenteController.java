@@ -52,7 +52,7 @@ public class RespondenteController {
     public ResponseEntity setTopicInfo(@PathVariable int cdNumeroRegistro, @RequestBody Respondente respondente){
         HashMap result = new HashMap();
 
-        respondente.setCdNumeroRegistro(cdNumeroRegistro);
+        respondente.setCod(cdNumeroRegistro);
         respondenteService.setRespondenteUpdateService(respondente);
         result.put("resultMessage", "success");
 
@@ -63,6 +63,7 @@ public class RespondenteController {
     public ResponseEntity deleteRepresentanteController(@PathVariable int cdNumeroRegistro){
         HashMap result = new HashMap();
 
+        log.info("tentando deletar respondentes via delete");
         respondenteService.deleteRepresentanteService(cdNumeroRegistro);
         result.put("resultMessage", "success");
 
