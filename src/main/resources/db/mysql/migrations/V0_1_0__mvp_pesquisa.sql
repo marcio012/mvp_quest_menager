@@ -400,8 +400,9 @@ INSERT INTO Useradmin (id, username, password, role) VALUES (2, 'admin', '$2a$04
 -- COMMIT;
 
 
-CREATE TABLE Respondente_audit (
-  cd_numero_registro INT NOT NULL AUTO_INCREMENT,
+CREATE TABLE Respondente_back (
+  cd_backup int not null auto_increment,
+  cd_numero_registro INT NOT null,
   cd_individuo INT NOT NULL,
   cd_fk_tab_fonte INT NOT NULL,
   cd_cpf VARCHAR(12) NOT NULL,
@@ -427,19 +428,79 @@ CREATE TABLE Respondente_audit (
   auxiliar_do_lar INT NOT NULL COMMENT 'Tipo:\n\n1 -> Empregada permanente;\n2 -> Diarista;',
   possui_carro TINYINT NOT NULL,
   raca INT NOT NULL COMMENT 'Tipo\n\n1 -> Branca\n2 -> Preta\n3 -> Amarela\n4 -> Parda\n5 -> Indígena\n\n',
-  PRIMARY KEY (cd_numero_registro)
+  PRIMARY KEY (cd_backup)
 );
 
+# Procedore de leitura nome Respondente
+DELIMITER $
+create procedure SP_Respondente_count(IN varRespondente smallint(6))
+SELECT CONCAT('Nome do Respresentante é ', Respondente.nome) as Respondente
+FROM Respondente
+WHERE cd_numero_registro = varRespondente;
 
-# DELIMITER $$
-# CREATE TRIGGER before_employee_update
-#   BEFORE UPDATE ON employees
+$
+
+DELIMITER ;
+
+# Chamada da procedore
+CALL SP_Respondente_count(2);
+
+
+DELIMITER $
+
+CREATE TRIGGER TRG_CountRepresentante BEFORE INSERT ON Respondente
+  FOR EACH ROW SET @countRepresentante = @countRepresentante + NEW.cd_numero_registro;
+
+$
+
+DELIMITER $
+# TRIGGER BACKUP RESPONDENTE
+CREATE TRIGGER TR_CountRespondente
+  BEFORE DELETE ON Respondente
+  FOR EACH ROW
+BEGIN
+  INSERT INTO Respondente_back values (
+                                       NULL,
+                                       OLD.cd_numero_registro,
+                                       OLD.cd_individuo,
+                                       OLD.cd_fk_tab_fonte,
+                                       OLD.cd_cpf,
+                                       OLD.nome,
+                                       OLD.email,
+                                       OLD.telefone_fixo,
+                                       OLD.telefone_cel,
+                                       OLD.cep ,
+                                       OLD.cd_fk_tab_estado,
+                                       OLD.cd_fk_tab_cidade ,
+                                       OLD.cd_fk_tab_municipio ,
+                                       OLD.sexo ,
+                                       OLD.data_nascimento ,
+                                       OLD.cd_fk_tab_faixa_etaria ,
+                                       OLD.cd_fk_tab_estado_civil ,
+                                       OLD.classe_social ,
+                                       OLD.cd_fk_tab_educacao ,
+                                       OLD.cd_fk_tab_renda ,
+                                       OLD.cd_fk_tab_profissao ,
+                                       OLD.cd_fk_posicao_trabalho ,
+                                       OLD.moradia ,
+                                       OLD.moradia_lazer ,
+                                       OLD.auxiliar_do_lar ,
+                                       OLD.possui_carro ,
+                                       OLD.raca
+
+                                       );
+END
+$
+
+DELIMITER ;
+
+
+
+# CREATE TRIGGER TR_CountRespondente BEFORE INSERT ON Respondente
+#
 #   FOR EACH ROW
 # BEGIN
-#   INSERT INTO employees_audit
-#   SET action = 'update',
-#       employeeNumber = OLD.employeeNumber,
-#       lastname = OLD.lastname,
-#       changedat = NOW();
-# END$$
-# DELIMITER ;
+#   SELECT COUNT(*) from Respondente;
+# END
+
+INSERT INTO Respondente (`cd_individuo`, `cd_fk_tab_fonte`, `cd_cpf`, `nome`, `email`, `telefone_fixo`, `telefone_cel`, `cep`, `cd_fk_tab_estado`, `cd_fk_tab_cidade`, `cd_fk_tab_municipio`, `sexo`, `data_nascimento`, `cd_fk_tab_faixa_etaria`, `cd_fk_tab_estado_civil`, `classe_social`, `cd_fk_tab_educacao`, `cd_fk_tab_renda`, `cd_fk_tab_profissao`, `cd_fk_posicao_trabalho`, `moradia`, `moradia_lazer`, `auxiliar_do_lar`, `possui_carro`, `raca`) VALUES (2, 1, '120120120-33', 'Fulano 4', 'fulano4@fulano.com', '85.5555.6666', '85.77777.8888', '1234567-098', 1, 2, 2, 1, '65522558', 1, 1, 'C', 3, 3, 4, 2, 2, 1, 1, 1, 2);
