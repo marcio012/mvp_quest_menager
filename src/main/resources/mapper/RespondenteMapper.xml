@@ -3,10 +3,15 @@
 
 <mapper namespace="website.marcioheleno.mvpquestmanager.mapper.RespondenteMapper">
 
+    <select id="getRespondenteAll" resultType="Respondente">
+        SELECT * FROM Respondente;
+    </select>
+
     <select id="getRespondenteListMapper" resultType="Respondente">
       SELECT
              Respondente.cd_numero_registro as "id",
-             Respondente.cd_individuo as "codUser",
+             Respondente.cd_individuo as "cod",
+             Fonte.nm_descricao as nomeFonte,
              Respondente.cd_cpf as "cpf",
              Respondente.nome as "nome",
              Respondente.email,
@@ -51,7 +56,7 @@
 
         SELECT
             Respondente.cd_numero_registro as "id",
-            Respondente.cd_individuo as "codUser",
+            Respondente.cd_individuo as "cod",
             Respondente.cd_cpf as "cpf",
             Respondente.nome as "nome",
             Respondente.email,
@@ -99,7 +104,7 @@
         INTO Respondente
         (
           cd_individuo,
-          cd_fk_tab_fonte, cd_cpf, nome, email, telefone_fixo,
+          cd_fk_tab_fonte, cd_cpf, `nome`, `email`, telefone_fixo,
           telefone_cel, cep, cd_fk_tab_estado, cd_fk_tab_cidade,
           cd_fk_tab_municipio, sexo, data_nascimento,
           cd_fk_tab_faixa_etaria, cd_fk_tab_estado_civil,

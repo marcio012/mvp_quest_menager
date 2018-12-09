@@ -28,7 +28,7 @@
 
 CREATE TABLE Fonte (
   cd_fonte INT NOT NULL AUTO_INCREMENT,
-  nm_descricao VARCHAR(100) NOT NULL,
+  nm_descricao VARCHAR(100) NULL DEFAULT '1',
   PRIMARY KEY (cd_fonte));
 
 
@@ -39,8 +39,8 @@ CREATE TABLE Fonte (
 
 CREATE TABLE UF (
   cd_uf INT NOT NULL AUTO_INCREMENT,
-  sigla_uf CHAR(2) NOT NULL,
-  nome VARCHAR(100) NOT NULL,
+  sigla_uf CHAR(2) NULL DEFAULT 'CE',
+  nome VARCHAR(100) NULL DEFAULT 'Ceará',
   PRIMARY KEY (cd_uf));
 
 
@@ -51,7 +51,7 @@ CREATE TABLE UF (
 
 CREATE TABLE Cidade (
   cd_cidade INT NOT NULL AUTO_INCREMENT,
-  nome_cidade VARCHAR(50) NULL,
+  nome_cidade VARCHAR(50) NULL DEFAULT 'Cidade A',
   PRIMARY KEY (cd_cidade));
 
 
@@ -62,7 +62,7 @@ CREATE TABLE Cidade (
 
 CREATE TABLE Municipio (
   cd_municipio INT NOT NULL AUTO_INCREMENT,
-  nome_municipio VARCHAR(50) NOT NULL,
+  nome_municipio VARCHAR(50) NULL DEFAULT 'Municipio A',
   PRIMARY KEY (cd_municipio));
 
 
@@ -73,7 +73,7 @@ CREATE TABLE Municipio (
 
 CREATE TABLE Faixa_Etaria (
   cd_faixa_etaria INT NOT NULL AUTO_INCREMENT,
-  desc_idade VARCHAR(20) NOT NULL COMMENT 'Multivalorado com as seguintes opções:\n1. menos de 20 anos\n2. 21 a 30 anos\n3. 31 a 40 anos\n4. 41 a 50 anos\n5. 51 a 60 anos\n6. 61 a 70 anos\n7. mais de 70 anos',
+  desc_idade VARCHAR(20) NULL DEFAULT 'menos de 20 anos' COMMENT 'Multivalorado com as seguintes opções:\n1. menos de 20 anos\n2. 21 a 30 anos\n3. 31 a 40 anos\n4. 41 a 50 anos\n5. 51 a 60 anos\n6. 61 a 70 anos\n7. mais de 70 anos',
   PRIMARY KEY (cd_faixa_etaria));
 
 
@@ -84,7 +84,7 @@ CREATE TABLE Faixa_Etaria (
 
 CREATE TABLE Estado_Civil (
   cd_estado_civil INT NOT NULL AUTO_INCREMENT,
-  desc_estado_civil VARCHAR(20) NULL COMMENT 'A descrição e multivalorada \n1. solteiro \n2. casado\n3. separado\n4. divorciado/desquitado\n5. viúvo ',
+  desc_estado_civil VARCHAR(20) NULL DEFAULT 'solteiro' COMMENT 'A descrição e multivalorada \n1. solteiro \n2. casado\n3. separado\n4. divorciado/desquitado\n5. viúvo ',
   PRIMARY KEY (cd_estado_civil));
 
 
@@ -95,7 +95,7 @@ CREATE TABLE Estado_Civil (
 
 CREATE TABLE Renda (
   cd_renda INT NOT NULL AUTO_INCREMENT,
-  desc_renda VARCHAR(100) NULL COMMENT 'Descrição da renda:\n1. de 700 a 1024\n2. de 1025 a 1704\n3. de 1705 a 2832\n4. de 2833 a 5346\n5 . mais de 5347',
+  desc_renda VARCHAR(100) NULL DEFAULT 'R$ 700,00 a R$ 1.024,00' COMMENT 'Descrição da renda:\n1. de 700 a 1024\n2. de 1025 a 1704\n3. de 1705 a 2832\n4. de 2833 a 5346\n5 . mais de 5347',
   PRIMARY KEY (cd_renda));
 
 
@@ -106,7 +106,7 @@ CREATE TABLE Renda (
 
 CREATE TABLE Educacao (
   cd_instrucao INT NOT NULL AUTO_INCREMENT,
-  desc_instrucao VARCHAR(200) NOT NULL COMMENT 'Tipo:\n\n1 -> Analfabeto / primeiro incompleto\n2 -> Primário Completo / Ginásio Incompleto\n3 -> Ginásio Completo / Colégial Incompleto\n4 -> Colégio Completo / Superior Incompleto\n5 -> Superior Completo',
+  desc_instrucao VARCHAR(200) NULL DEFAULT 'Superio Completo' COMMENT 'Tipo:\n\n1 -> Analfabeto / primeiro incompleto\n2 -> Primário Completo / Ginásio Incompleto\n3 -> Ginásio Completo / Colégial Incompleto\n4 -> Colégio Completo / Superior Incompleto\n5 -> Superior Completo',
   PRIMARY KEY (cd_instrucao));
 
 
@@ -117,7 +117,7 @@ CREATE TABLE Educacao (
 
 CREATE TABLE Profissao (
   cd_profissao INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  desc_profissao VARCHAR(255) NOT NULL COMMENT 'Descrição da Profissão (Alfanumérico, Tamanho: 40). Valores possíveis: \n1. diretor e gerente\n2. profissionais cientistas e intelectuais\n3. tecnicos e profissões nível médio\n4. trabalhadores de apoio administrativo\n5. trabalhadores de serviços, vendedores comerciais e mercado\n6. trababalhores qualificados agropecuária floresta e caça\n7. trabalhadores qualificados artesãos\n8. operadores de instalações, maquinas e montagens\n9. ocupações elementares\n0. membros das FAs policia bombeiros',
+  desc_profissao VARCHAR(255) NULL DEFAULT 'Tecnicos / Profissionais Nível Médi' COMMENT 'Descrição da Profissão (Alfanumérico, Tamanho: 40). Valores possíveis: \n1. diretor e gerente\n2. profissionais cientistas e intelectuais\n3. tecnicos e profissões nível médio\n4. trabalhadores de apoio administrativo\n5. trabalhadores de serviços, vendedores comerciais e mercado\n6. trababalhores qualificados agropecuária floresta e caça\n7. trabalhadores qualificados artesãos\n8. operadores de instalações, maquinas e montagens\n9. ocupações elementares\n0. membros das FAs policia bombeiros',
   PRIMARY KEY (cd_profissao));
 
 
@@ -128,7 +128,7 @@ CREATE TABLE Profissao (
 
 CREATE TABLE Posicao_Trabalho (
   cd_posicao_trabalho INT NOT NULL AUTO_INCREMENT,
-  desc_posicao_trabalho VARCHAR(255) NOT NULL COMMENT 'Descrição da da Posição Trabalho (Alfanumérico, Tamanho: 20). Valores possíveis:  \n\n1. patrão\n2. diretor com chefia de funcionários\n3. diretor\n4. gerente com chefia de funcionários\n5. gerente\n6. quadro médio \n7. funcionário administrativo',
+  desc_posicao_trabalho VARCHAR(255) NULL COMMENT 'Descrição da da Posição Trabalho (Alfanumérico, Tamanho: 20). Valores possíveis:  \n\n1. patrão\n2. diretor com chefia de funcionários\n3. diretor\n4. gerente com chefia de funcionários\n5. gerente\n6. quadro médio \n7. funcionário administrativo',
   PRIMARY KEY (cd_posicao_trabalho));
 
 
@@ -443,7 +443,7 @@ $
 DELIMITER ;
 
 # Chamada da procedore
-CALL SP_Respondente_count(2);
+CALL SP_Respondente_count(4);
 
 
 DELIMITER $
@@ -504,3 +504,47 @@ DELIMITER ;
 # END
 
 INSERT INTO Respondente (`cd_individuo`, `cd_fk_tab_fonte`, `cd_cpf`, `nome`, `email`, `telefone_fixo`, `telefone_cel`, `cep`, `cd_fk_tab_estado`, `cd_fk_tab_cidade`, `cd_fk_tab_municipio`, `sexo`, `data_nascimento`, `cd_fk_tab_faixa_etaria`, `cd_fk_tab_estado_civil`, `classe_social`, `cd_fk_tab_educacao`, `cd_fk_tab_renda`, `cd_fk_tab_profissao`, `cd_fk_posicao_trabalho`, `moradia`, `moradia_lazer`, `auxiliar_do_lar`, `possui_carro`, `raca`) VALUES (2, 1, '120120120-33', 'Fulano 4', 'fulano4@fulano.com', '85.5555.6666', '85.77777.8888', '1234567-098', 1, 2, 2, 1, '65522558', 1, 1, 'C', 3, 3, 4, 2, 2, 1, 1, 1, 2);
+
+
+sql> INSERT
+     INTO Respondente
+     (
+       cd_individuo,
+       cd_fk_tab_fonte, cd_cpf, `nome`, `email`, telefone_fixo,
+       telefone_cel, cep, cd_fk_tab_estado, cd_fk_tab_cidade,
+       cd_fk_tab_municipio, sexo, data_nascimento,
+       cd_fk_tab_faixa_etaria, cd_fk_tab_estado_civil,
+       classe_social, cd_fk_tab_educacao, cd_fk_tab_renda,
+       cd_fk_tab_profissao, cd_fk_posicao_trabalho,
+       moradia, moradia_lazer, auxiliar_do_lar, possui_carro,
+       raca
+     )
+     VALUES
+     (
+       1111,
+       2,
+       12236781-12,
+       'Heleno',
+       'asdas',
+       '85 97866.5432',
+       '85 91818.9121',
+       60543219,
+       3,
+       2,
+       1,
+       1,
+       16125251,
+       1,
+       2,
+       3,
+       3,
+       2,
+       3,
+       2,
+       1,
+       2,
+       1,
+       1,
+       2
+     )
+
